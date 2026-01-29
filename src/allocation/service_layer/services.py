@@ -1,10 +1,12 @@
 from __future__ import annotations
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 from datetime import date
 
 from allocation.domain import model
 from allocation.domain.model import OrderLine
-from allocation.service_layer import unit_of_work
+
+if TYPE_CHECKING:
+    from . import unit_of_work
 
 
 class InvalidSku(Exception):
@@ -35,4 +37,4 @@ def allocate(
             raise InvalidSku(f"Invalid sku {line.sku}")
         batchref = product.allocate(line)
         uow.commit()
-    return batchref
+        return batchref

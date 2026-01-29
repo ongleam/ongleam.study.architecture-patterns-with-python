@@ -1,10 +1,9 @@
 from sqlalchemy import Table, Column, Integer, String, Date, ForeignKey
 from sqlalchemy.orm import registry, relationship
 
-from allocation.domain import model
+from domain import model
 
 _mappers_started = False
-
 
 mapper_registry = registry()
 metadata = mapper_registry.metadata

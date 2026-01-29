@@ -2,16 +2,16 @@ from datetime import date
 
 from sqlalchemy import text
 
-from allocation.domain import model
+from domain import model
 
 
 def test_orderline_mapper_can_load_lines(session):
     session.execute(
         text(
             "INSERT INTO order_lines (orderid, sku, qty) VALUES "
-            '("order1", "RED-CHAIR", 12),'
-            '("order1", "RED-TABLE", 13),'
-            '("order2", "BLUE-LIPSTICK", 14)'
+            "('order1', 'RED-CHAIR', 12),"
+            "('order1', 'RED-TABLE', 13),"
+            "('order2', 'BLUE-LIPSTICK', 14)"
         )
     )
     expected = [
@@ -35,13 +35,13 @@ def test_retrieving_batches(session):
     session.execute(
         text(
             "INSERT INTO batches (reference, sku, _purchased_quantity, eta)"
-            ' VALUES ("batch1", "sku1", 100, null)'
+            " VALUES ('batch1', 'sku1', 100, null)"
         )
     )
     session.execute(
         text(
             "INSERT INTO batches (reference, sku, _purchased_quantity, eta)"
-            ' VALUES ("batch2", "sku2", 200, "2011-04-11")'
+            " VALUES ('batch2', 'sku2', 200, '2011-04-11')"
         )
     )
     expected = [
@@ -74,7 +74,7 @@ def test_saving_allocations(session):
 
 def test_retrieving_allocations(session):
     session.execute(
-        text('INSERT INTO order_lines (orderid, sku, qty) VALUES ("order1", "sku1", 12)')
+        text("INSERT INTO order_lines (orderid, sku, qty) VALUES ('order1', 'sku1', 12)")
     )
     [[olid]] = session.execute(
         text("SELECT id FROM order_lines WHERE orderid=:orderid AND sku=:sku"),
@@ -83,7 +83,7 @@ def test_retrieving_allocations(session):
     session.execute(
         text(
             "INSERT INTO batches (reference, sku, _purchased_quantity, eta)"
-            ' VALUES ("batch1", "sku1", 100, null)'
+            " VALUES ('batch1', 'sku1', 100, null)"
         )
     )
     [[bid]] = session.execute(

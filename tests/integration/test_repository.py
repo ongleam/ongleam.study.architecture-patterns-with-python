@@ -1,8 +1,8 @@
 # pylint: disable=protected-access
 from sqlalchemy import text
 
-from allocation.domain import model
-from allocation.adapters import repository
+from domain import model
+from adapters import repository
 
 
 def test_repository_can_save_a_batch(session):
@@ -22,7 +22,7 @@ def insert_order_line(session):
     session.execute(
         text(
             "INSERT INTO order_lines (orderid, sku, qty)"
-            ' VALUES ("order1", "GENERIC-SOFA", 12)'
+            " VALUES ('order1', 'GENERIC-SOFA', 12)"
         )
     )
     [[orderline_id]] = session.execute(
@@ -36,12 +36,12 @@ def insert_batch(session, batch_id):
     session.execute(
         text(
             "INSERT INTO batches (reference, sku, _purchased_quantity, eta)"
-            ' VALUES (:batch_id, "GENERIC-SOFA", 100, null)'
+            " VALUES (:batch_id, 'GENERIC-SOFA', 100, null)"
         ),
         dict(batch_id=batch_id),
     )
     [[batch_id]] = session.execute(
-        text('SELECT id FROM batches WHERE reference=:batch_id AND sku="GENERIC-SOFA"'),
+        text("SELECT id FROM batches WHERE reference=:batch_id AND sku='GENERIC-SOFA'"),
         dict(batch_id=batch_id),
     )
     return batch_id

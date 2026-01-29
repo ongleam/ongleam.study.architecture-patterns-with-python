@@ -22,6 +22,13 @@ class Product:
             self.events.append(events.OutOfStock(line.sku))
             return None
 
+    def change_batch_quantity(self, ref: str, qty: int):
+        batch = next(b for b in self.batches if b.reference == ref)
+        batch._purchased_quantity = qty
+        while batch.available_quantity < 0:
+            line = batch.deallocate_one()
+            self.events.append(events.AllocationRequired(line.orderid, line.sku, line.qty))
+
 
 @dataclass(unsafe_hash=True)
 class OrderLine:
@@ -59,6 +66,9 @@ class Batch:
     def allocate(self, line: OrderLine):
         if self.can_allocate(line):
             self._allocations.add(line)
+
+    def deallocate_one(self) -> OrderLine:
+        return self._allocations.pop()
 
     def deallocate(self, line: OrderLine):
         if line in self._allocations:

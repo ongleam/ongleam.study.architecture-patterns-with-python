@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from allocation.domain import model
-from allocation.domain.model import OrderLine
-from allocation.adapters.repository import AbstractRepository
+import model
+from model import OrderLine
+from repository import AbstractRepository
 
 
 class InvalidSku(Exception):

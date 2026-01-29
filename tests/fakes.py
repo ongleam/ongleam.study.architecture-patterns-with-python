@@ -14,3 +14,10 @@ class FakeRepository(AbstractRepository):
 
     def list(self) -> list[model.Batch]:
         return list(self._batches)
+
+
+class FakeSession:
+    committed = False
+
+    def commit(self):
+        self.committed = True

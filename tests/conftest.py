@@ -2,7 +2,8 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, clear_mappers
 
-from allocation.adapters.orm import metadata, start_mappers, mapper_registry
+from allocation.adapters import orm
+from allocation.adapters.orm import metadata, start_mappers
 
 
 @pytest.fixture
@@ -17,3 +18,4 @@ def session(in_memory_db):
     start_mappers()
     yield sessionmaker(bind=in_memory_db)()
     clear_mappers()
+    orm._mappers_started = False

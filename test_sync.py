@@ -1,9 +1,7 @@
 import tempfile
 from pathlib import Path
 import shutil
-
-from ch03.sync import sync, determine_actions
-from ch03.filesystem import FakeFileSystem
+from sync import sync, determine_actions
 
 
 class TestE2E:
@@ -47,55 +45,6 @@ class TestE2E:
         finally:
             shutil.rmtree(source)
             shutil.rmtree(dest)
-
-
-class TestWithFakeFileSystem:
-    def test_when_a_file_exists_in_the_source_but_not_the_destination(self):
-        source = Path("/source")
-        dest = Path("/dest")
-        fs = FakeFileSystem()
-        fs.create_file(source / "my-file", "I am a very useful file")
-
-        sync(source, dest, filesystem=fs)
-
-        assert fs.exists(dest / "my-file")
-        assert fs.read(dest / "my-file") == "I am a very useful file"
-
-    def test_when_a_file_has_been_renamed_in_the_source(self):
-        source = Path("/source")
-        dest = Path("/dest")
-        content = "I am a file that was renamed"
-        fs = FakeFileSystem()
-        fs.create_file(source / "source-filename", content)
-        fs.create_file(dest / "dest-filename", content)
-
-        sync(source, dest, filesystem=fs)
-
-        assert not fs.exists(dest / "dest-filename")
-        assert fs.exists(dest / "source-filename")
-        assert fs.read(dest / "source-filename") == content
-
-    def test_when_a_file_exists_in_dest_but_not_source(self):
-        source = Path("/source")
-        dest = Path("/dest")
-        fs = FakeFileSystem()
-        fs.create_file(dest / "obsolete-file", "I should be deleted")
-
-        sync(source, dest, filesystem=fs)
-
-        assert not fs.exists(dest / "obsolete-file")
-
-    def test_records_actions(self):
-        source = Path("/source")
-        dest = Path("/dest")
-        fs = FakeFileSystem()
-        fs.create_file(source / "new-file", "new content")
-        fs.create_file(dest / "old-file", "old content")
-
-        sync(source, dest, filesystem=fs)
-
-        assert ("COPY", source / "new-file", dest / "new-file") in fs.actions
-        assert ("DELETE", dest / "old-file") in fs.actions
 
 
 def test_when_a_file_exists_in_the_source_but_not_the_destination():

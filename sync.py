@@ -3,17 +3,11 @@ import os
 import shutil
 from pathlib import Path
 
-from ch03.filesystem import AbstractFileSystem, RealFileSystem
 
-
-def sync(source, dest, filesystem: AbstractFileSystem | None = None):
-    # Default to real filesystem for backward compatibility
-    if filesystem is None:
-        filesystem = RealFileSystem()
-
+def sync(source, dest):
     # imperative shell step 1, gather inputs
-    source_hashes = filesystem.read_paths_and_hashes(source)
-    dest_hashes = filesystem.read_paths_and_hashes(dest)
+    source_hashes = read_paths_and_hashes(source)
+    dest_hashes = read_paths_and_hashes(dest)
 
     # step 2: call functional core
     actions = determine_actions(source_hashes, dest_hashes, source, dest)
@@ -21,11 +15,11 @@ def sync(source, dest, filesystem: AbstractFileSystem | None = None):
     # imperative shell step 3, apply outputs
     for action, *paths in actions:
         if action == "COPY":
-            filesystem.copy(*paths)
+            shutil.copyfile(*paths)
         if action == "MOVE":
-            filesystem.move(*paths)
+            shutil.move(*paths)
         if action == "DELETE":
-            filesystem.delete(paths[0])
+            os.remove(paths[0])
 
 
 BLOCKSIZE = 65536

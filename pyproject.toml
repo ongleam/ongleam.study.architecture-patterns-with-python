@@ -1,22 +1,14 @@
 [project]
-name = "allocation"
+name = "sync"
 version = "0.1.0"
-description = "Architecture Patterns with Python - 실습 프로젝트"
+description = "Architecture Patterns with Python - Chapter 03 Abstractions"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = [
-    "fastapi>=0.109.0",
-    "uvicorn>=0.27.0",
-    "sqlalchemy>=2.0.0",
-    "pydantic>=2.0.0",
-    "markitdown[pdf]>=0.1.4",
-]
+dependencies = []
 
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0.0",
-    "pytest-asyncio>=0.23.0",
-    "httpx>=0.26.0",
 ]
 
 [build-system]
@@ -24,8 +16,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/allocation"]
+packages = ["."]
+only-include = ["sync.py"]
 
 [tool.pytest.ini_options]
-pythonpath = ["src", "examples"]
-testpaths = ["tests", "examples"]
+pythonpath = ["."]
+testpaths = ["."]
